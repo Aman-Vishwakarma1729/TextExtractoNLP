@@ -1,25 +1,46 @@
-## To sun the program and get the output:
-* 1) run --> pip install -r requirements.txt  --- {To install required dependecies}
-* 2) run --> python main.py  --- (To extract data and save it in required format)
+# <div align="center">TextExtractoNLP: Web data scrapping and feature extraction for NLP</div>
+<div align="center">
+  <img src="readme_data/TextExtractoNLP.jpg" alt="Watch-Guard-AI" width="500"/>
+</div>
 
-## Basic explanation, how code works:
+## Table of content
+--------------
+1. [Introduction](#introduction)
+2. [Details](#details)
+3. [Tools and  techniques used](#tools-and-techniques-used)
 
-Importing Libraries: The script begins by importing necessary libraries such as BeautifulSoup for web scraping, pandas for data manipulation, requests for making HTTP requests, nltk for natural language processing tasks, and re for regular expressions.
 
-File Paths Setup: The script sets up file paths for input data (an Excel file containing URLs), output data, and other artifacts required for analysis.
+## Introduction
+---------------
+TextExtractoNLP is a data scrapping and natural language processing (NLP) project designed to automate the extraction of article content from URLs provided in an Excel file and perform detailed text analysis. Utilizing Python libraries like BeautifulSoup, Selenium, and Scrapy, the project focuses on deriving sentiment scores, readability metrics, and other key textual variables, helping to transform raw textual data into structured insights. The analysis includes calculating polarity, subjectivity, word count, syllable count, and identifying personal pronouns, ensuring comprehensive content evaluation.
 
-Data Extraction: The extract_data function extracts article content from provided URLs using web scraping techniques. It handles exceptions gracefully and returns either the extracted article or an error message.
+This project is mainly focused on DATA SCRAPPING and FEATURE GENERATION out of scrapped data i.e. creating the dataset.
 
-Data Frame Creation: The getting_data_frame function iterates over the URLs in the input Excel file, extracts article content using the extract_data function, and constructs a pandas DataFrame containing URL IDs, URLs, and extracted articles.
+## Details
+----------
 
-Text Preprocessing: The script loads stop words from files, removes them from the articles, and removes punctuation from the cleaned text.
+* Scrapping the dataset using BeautifulSoup for each URL in input.xlsx in artifacts folder.
+* Cleaning of textual data is done using stop words lists present in artifacts folder. Stop word list is custom defined stopwords.
+* The feature of the data that are extracted are for NLP process are as follows:
 
-Sentiment Analysis: It loads positive and negative word lists, counts occurrences of these words in each article, calculates polarity and subjectivity scores, and adds them to the DataFrame.
+1) **Positive Score**: This score is calculated by assigning the value of +1 for each word if found in the Positive Dictionary which is present in artifacts folder in MasterDictionary and then adding up all the values.
+2) **Negative Score**: This score is calculated by assigning the value of -1 for each word if found in the Negative Dictionary which is present in artifacts folder in MasterDictionary and then adding up all the values. We multiply the score with -1 so that the score is a positive number.
+3) **Polarity Score**: This is the score that determines if a given text is positive or negative in nature. It is calculated by using the formula: 
+Polarity Score = (Positive Score – Negative Score)/ ((Positive Score + Negative Score) + 0.000001)
+4) **Subjectivity Score**: This is the score that determines if a given text is objective or subjective. It is calculated by using the formula: 
+Subjectivity Score = (Positive Score + Negative Score)/ ((Total Words after cleaning) + 0.000001)
+5) **Average Sentence Length** = the number of words / the number of sentences
+6) **Percentage of Complex words** = the number of complex words / the number of words 
+7) **Fog Index** = 0.4 * (Average Sentence Length + Percentage of Complex words)
+8) **Complex Word Count**: Complex words are words in the text that contain more than two syllables.
+9) **Word Count**: We count the total cleaned words present in the text after removing stopwords and punctuation.
+10) **Syllable Count Per Word**: We count the number of Syllables in each word of the text by counting the vowels present in each word. We also handle some exceptions like words ending with "es","ed" by not counting them as a syllable.
+11) **Personal Pronouns**: To calculate Personal Pronouns mentioned in the text, we use regex to find the counts of the words - “I,” “we,” “my,” “ours,” and “us”. Special care is taken so that the country name US is not included in the list.
 
-Linguistic Feature Calculation: The script calculates various linguistic features such as average word length, personal pronoun count, syllables per word, average sentence length, percentage of complex words, Fog index, and average number of words per sentence. These features are added to the DataFrame.
+## Tools and  techniques used
+-----------------------------
+* Pandas
+* BeautifulSoup
+* nltk
 
-Output: The DataFrame is then filtered to select relevant columns and saved as a CSV file named "Output_data.csv".
 
-Main Function: The main function orchestrates the entire process by calling the necessary functions in order.
-
-Execution: Finally, the script checks if it's being run directly (__name__ == '__main__') and if so, executes the main function.
